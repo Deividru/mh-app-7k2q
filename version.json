@@ -3,8 +3,8 @@
  "notas": "Primera versión con actualizaciones automáticas",
  "app": {
   "file": "app.html",
-  "sha256": "e8e23e21a3263c5b34e18305e6559748578bb416d9d9d7c4c5057e3087662e4f",
-  "firma": "GcCt1Ksd9CgkoZ732N_gnrRwN9o03zrrUxfHdycnlcrJIqViqo5POh0A0NmJ0kIjrCdXA0ubJntl9laBZkgbEg"
+  "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
+  "firma": "ZSX6gbXKMYB9iYEf8b2_IeN2HMAqY2B-h_6w4jA2rZKyw0YzkAc0UsmwhxCWj47tDvOq5VxXxM5jNEheLE7PbQ"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
