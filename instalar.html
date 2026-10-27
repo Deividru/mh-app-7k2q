@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><title>Instalar Mis Horas</title>
+<style>
+/* Asistente de instalación en una columna: elige tu dispositivo, sigue los pasos y márcalos */
+:root{--bg:#f3f6fb;--card:#fff;--fg:#14233a;--mute:#5d6f88;--line:#dbe3ee;--acc:#2d6cb3;--navy:#14284a;--ok:#1f8a5b;--okbg:#e4f5ec;--code:#eef2f7;--warn:#b7791f;--onacc:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141c;--card:#18202b;--fg:#e6ebf2;--mute:#9aa6b8;--line:#2a3442;--acc:#6aa6ec;--navy:#0b1830;--ok:#3fb950;--okbg:#14301f;--code:#0d1117;--warn:#d69e2e;--onacc:#0b1830;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f141c;--card:#18202b;--fg:#e6ebf2;--mute:#9aa6b8;--line:#2a3442;--acc:#6aa6ec;--navy:#0b1830;--ok:#3fb950;--okbg:#14301f;--code:#0d1117;--warn:#d69e2e;--onacc:#0b1830;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 -apple-system,system-ui,"Segoe UI",sans-serif;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px}
+.hero{background:var(--navy);color:#fff;margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px))) 18px;padding:22px max(16px,env(safe-area-inset-left,0px)) 20px}
+.hero h1{margin:0 0 4px;font-size:24px;text-wrap:balance}.hero p{margin:0;color:#c9d6ea;font-size:15px}
+main{max-width:600px;margin:0 auto;display:grid;gap:14px}
+.seg{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px}
+.seg button{flex:1;font:inherit;font-weight:600;border:0;background:none;color:var(--mute);border-radius:9px;padding:10px 4px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--acc);color:var(--onacc)}
+.prog{font-size:14px;color:var(--mute)}.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+.step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;grid-template-columns:34px 1fr;gap:12px;min-width:0}
+.step.done{border-color:var(--ok)}
+.num{width:34px;height:34px;border-radius:10px;background:var(--code);color:var(--acc);display:grid;place-items:center;font-weight:700}
+.step.done .num{background:var(--okbg);color:var(--ok)}
+.step h2{margin:2px 0 6px;font-size:17px}.step .tx{min-width:0;display:grid;gap:8px}
+.step p,.step li{margin:0;font-size:15px;color:var(--fg)}.step ol{margin:0;padding-left:20px;display:grid;gap:4px}
+.muted{color:var(--mute)!important;font-size:14px!important}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{font:inherit;font-weight:600;border:0;border-radius:10px;padding:10px 14px;background:var(--acc);color:var(--onacc);cursor:pointer;text-decoration:none;display:inline-block}
+.btn.sec{background:var(--code);color:var(--fg);border:1px solid var(--line)}
+.btn:focus-visible,.seg button:focus-visible,.chk:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+.chk{justify-self:start;font:inherit;font-size:14px;border:1px solid var(--line);background:none;color:var(--mute);border-radius:8px;padding:6px 10px;cursor:pointer}
+.step.done .chk{color:var(--ok);border-color:var(--ok)}
+code,.cp{font:13px ui-monospace,Menlo,monospace;background:var(--code);border:1px solid var(--line);border-radius:6px;padding:2px 6px;word-break:break-all}
+.cp{display:block;padding:8px 10px}
+.msg{font-size:14px;color:var(--ok);font-weight:600}
+.note{font-size:14px;color:var(--mute);background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:12px}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style></head><body>
+<div class="hero"><h1>Instalar Mis Horas</h1><p>Tus horas, tus Excel de semana, la nómina y el cotejo, dentro de Synology (box.ingenix.es) y con tu propio usuario. En el ordenador no se instala nada; en el móvil se prepara una vez, en unos 5 minutos.</p></div>
+<main>
+  <div class="seg" role="group" aria-label="Tu dispositivo">
+    <button type="button" id="p-ios" data-p="ios">iPhone</button>
+    <button type="button" id="p-and" data-p="and">Android</button>
+    <button type="button" id="p-pc" data-p="pc">Ordenador</button>
+  </div>
+  <div><div class="prog" id="prog"></div><div class="bar"><i id="bar"></i></div></div>
+  <div id="steps" style="display:grid;gap:12px"></div>
+  <div class="note"><b>Qué hace y qué no.</b> Solo funciona dentro de box.ingenix.es con tu usuario. La primera vez lee tus nóminas, informes, contratos y timesheets de este año; después solo mira «1. Timesheets» de este año. Solo escribe tus Excel de semana en «1. Timesheets/AAMM». Nunca borra nada. Los datos de nómina se guardan cifrados con tu PIN en tu móvil.</div>
+  <div class="note"><b>Actualizar.</b> Es automático: la app se actualiza sola cuando abres Mis Horas con conexión. No tienes que hacer nada.</div>
+</main>
+<script>
+const SCRIPT_URL=new URL('Mis_Horas_Ingenix.user.js',location.href).href;
+let codeP=null;const getCode=()=>codeP||(codeP=fetch(SCRIPT_URL,{cache:'no-store'}).then(r=>r.text()));
+const LINK='https://box.ingenix.es/?mishoras';
+const st=(()=>{try{return JSON.parse(localStorage.getItem('mhInst')||'{}')}catch(e){return{}}})();
+const guarda=()=>{try{localStorage.setItem('mhInst',JSON.stringify(st))}catch(e){}};
+const ua=navigator.userAgent;st.p=st.p||(/iPhone|iPad|iPod/.test(ua)?'ios':/Android/.test(ua)?'and':'pc');
+const btnScript=`<div class="row"><a class="btn" href="${SCRIPT_URL}">Instalar directamente</a></div><p class="muted">Si no se abre la instalación, usa estos botones:</p><div class="row"><button class="btn" type="button" data-x="copy">Copiar script</button><button class="btn sec" type="button" data-x="save" id="bSave">Guardar como archivo</button></div><span class="msg" data-m hidden></span>`;
+const P={
+ ios:[
+  ['Instala la app Userscripts','<p>Es gratuita y añade scripts a Safari.</p><div class="row"><a class="btn" href="https://apps.apple.com/app/userscripts/id1463298887" target="_blank" rel="noopener">Abrir App Store</a></div><p class="muted">Ábrela una vez y elige una carpeta para tus scripts (por ejemplo «Userscripts» en iCloud Drive o En mi iPhone).</p>'],
+  ['Actívala en Safari','<ol><li><b>Ajustes → Apps → Safari → Extensiones → Userscripts</b>: actívala.</li><li>En <b>box.ingenix.es</b> (o «Otros sitios web») elige <b>Permitir</b>.</li></ol>'],
+  ['Añade el script de Mis Horas','<p><b>Opción A (pegar):</b> copia el script; en Safari toca <b>aA → Userscripts → +  → New JS</b>, borra lo que haya, pega y <b>Save</b>.</p><p><b>Opción B (archivo):</b> guárdalo en la carpeta de Userscripts y en la app Archivos quita el <b>.txt</b> del final del nombre.</p>'+btnScript],
+  ['Crea el acceso directo','<p>El script solo está en Safari. Elige una de estas dos formas:</p><p><b>Si Safari es tu navegador por defecto:</b> en Safari abre <b>box.ingenix.es</b> → Compartir → <b>Añadir a pantalla de inicio</b> (con «Abrir como app web» desactivado).</p><p><b>Si usas Chrome por defecto:</b> en Safari crea un <b>grupo de pestañas</b> llamado <b>Mis Horas</b> con solo la pestaña de box.ingenix.es. Luego en <b>Atajos → + → Abrir grupo de pestañas</b> (acción de Safari) → «Mis Horas» → <b>Añadir a pantalla de inicio</b>.</p><p class="muted">En el móvil Mis Horas se abre sola al entrar en box.ingenix.es con tu sesión.</p>'],
+  ['Ábrela y entra','<p>Toca el icono, inicia sesión con tu usuario de Synology y Mis Horas se abre sola. La primera vez pulsa <b>Leer mi carpeta de Synology</b> y elige un PIN.</p><p class="muted">Si no se abre: comprueba el paso 2 (permiso en box.ingenix.es) y que el script esté activado en Userscripts. «Ir a Synology Drive» la cierra durante 10 minutos; para volver, toca el botón «Mis Horas».</p>']],
+ and:[
+  ['Elige el navegador: Edge o Firefox','<p>Chrome para Android no admite extensiones, así que Mis Horas no puede funcionar dentro de Chrome. Usa uno de estos dos (los dos son gratis y puedes seguir usando Chrome para todo lo demás):</p><p><b>Microsoft Edge</b> (recomendado, es casi igual que Chrome) o <b>Firefox</b>.</p><div class="row"><a class="btn" href="https://play.google.com/store/apps/details?id=com.microsoft.emmx" target="_blank" rel="noopener">Edge en Google Play</a><a class="btn sec" href="https://play.google.com/store/apps/details?id=org.mozilla.firefox" target="_blank" rel="noopener">Firefox en Google Play</a></div>'],
+  ['Añade la extensión de scripts','<p><b>En Edge:</b> menú <b>≡</b> (abajo) → <b>Extensiones</b> → busca <b>Tampermonkey</b> → <b>Obtener</b>.</p><p><b>En Firefox:</b> abre este enlace en Firefox y pulsa <b>Añadir a Firefox</b>:</p><code class="cp">https://addons.mozilla.org/android/addon/violentmonkey/</code><div class="row"><button class="btn sec" type="button" data-x="copyurl" data-u="https://addons.mozilla.org/android/addon/violentmonkey/">Copiar enlace</button></div>'],
+  ['Añade el script de Mis Horas','<ol><li>Copia el script.</li><li><b>Edge:</b> menú <b>≡ → Extensiones → Tampermonkey → Crear un nuevo script</b>. <b>Firefox:</b> menú <b>⋮ → Extensiones → Violentmonkey → +</b>.</li><li>Borra lo que haya, pega y <b>guarda</b>.</li></ol><p class="muted">Si Tampermonkey avisa de que los scripts de usuario están desactivados, sigue su aviso para permitirlos.</p>'+btnScript],
+  ['Crea el acceso directo','<ol><li>En el mismo navegador (Edge o Firefox) abre:</li></ol><code class="cp">https://box.ingenix.es/?mishoras</code><div class="row"><button class="btn sec" type="button" data-x="copyurl" data-u="https://box.ingenix.es/?mishoras">Copiar dirección</button></div><ol start="2"><li>Menú → <b>Añadir a pantalla de inicio</b> (en Edge puede llamarse <b>Añadir al teléfono</b>), nombre <b>Mis Horas</b>.</li></ol><p class="muted">El icono abre ese navegador, que es donde está el script.</p>'],
+  ['Ábrela y entra','<p>Toca el icono, inicia sesión con tu usuario de Synology y se abre Mis Horas. La primera vez pulsa <b>Leer mi carpeta de Synology</b> y elige un PIN.</p>']],
+ pc:[
+  ['No hace falta instalar nada','<p>En el ordenador la app lee tu carpeta directamente, porque Synology Drive ya la tiene sincronizada en el disco. Solo necesitas el archivo <b>Cotejo_Ingenix_Lanzador.html</b> (te lo pasa David).</p><p class="muted">Lo de instalar scripts es solo para el móvil: el iPhone y Android no dejan a una web abrir una carpeta entera.</p>'],
+  ['Ábrelo y elige tu carpeta','<ol><li>Doble clic en <b>Cotejo_Ingenix_Lanzador.html</b> (mejor con Chrome o Edge).</li><li>Pulsa <b>Elegir carpeta</b> y selecciona tu carpeta de empleado dentro de Synology Drive (por ejemplo <b>SynologyDrive → 2. Empleados → N42 …</b>).</li><li>La próxima vez solo tendrás que pulsar <b>Seguir con la misma carpeta</b>.</li></ol>'],
+  ['Listo','<p>Verás incidencias, nómina, bolsa, contrato y «Timesheets del mes» para crear las semanas en blanco. Solo escribe en <b>1. Timesheets</b>.</p><p class="muted">Opcional: si también quieres en el ordenador la versión del móvil dentro de box.ingenix.es, instala Tampermonkey y pega el script como en el paso 3 de Android.</p>']]};
+let DL=null;window.claude&&window.claude.use&&window.claude.use('downloads').then(d=>{DL=d;render()}).catch(()=>{});
+function render(){const L=P[st.p],done=st[st.p]||[];
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.p===st.p));
+  document.getElementById('steps').innerHTML=L.map(([t,h],i)=>`<section class="step ${done[i]?'done':''}"><span class="num">${done[i]?'✓':i+1}</span><div class="tx"><h2>${t}</h2>${h}<button class="chk" type="button" data-x="chk" data-i="${i}">${done[i]?'Hecho ✓':'Marcar como hecho'}</button></div></section>`).join('');
+  const n=done.filter(Boolean).length;document.getElementById('prog').textContent=`${n} de ${L.length} pasos`+(n===L.length?' · ¡listo!':'');document.getElementById('bar').style.width=(100*n/L.length)+'%';
+  document.querySelectorAll('[data-x=save]').forEach(b=>b.hidden=!DL)}
+async function copia(t,el){const m=el.closest('.tx').querySelector('[data-m]');try{await navigator.clipboard.writeText(t);if(m){m.textContent='Copiado ✓';m.hidden=false}else el.textContent='Copiado ✓'}catch(e){const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;left:0;top:0;width:100%;height:40%';document.body.appendChild(ta);ta.focus();ta.select();if(m){m.textContent='Texto seleccionado: toca «Copiar» y luego cierra con otro toque fuera';m.hidden=false}setTimeout(()=>ta.remove(),20000)}}
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-x],[data-p]');if(!b)return;
+  if(b.dataset.p){st.p=b.dataset.p;guarda();render();return}
+  const x=b.dataset.x;
+  if(x==='chk'){const a=st[st.p]=st[st.p]||[];a[+b.dataset.i]=!a[+b.dataset.i];guarda();render()}
+  else if(x==='copy'){try{copia(await getCode(),b)}catch(err){b.textContent='Sin conexión'}}
+  else if(x==='copyurl')copia(b.dataset.u,b);
+  else if(x==='save'&&DL){const m=b.closest('.tx').querySelector('[data-m]');try{await DL.save({filename:'Mis_Horas_Ingenix.user.js.txt',data:new Blob([await getCode()],{type:'text/plain'})});m.textContent='Guardado: quita el .txt del nombre';}catch(err){m.textContent=err&&err.code==='declined'?'Cancelado':'No se pudo guardar: usa Copiar script'}m.hidden=false}});
+render();
+</script>
+</body></html>
