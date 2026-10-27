@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prueba de carpeta</title>
+<style>body{font:16px/1.5 system-ui,sans-serif;margin:0;padding:16px;background:#f3f6fb;color:#14233a}
+h1{font-size:20px}button,label.b{display:block;width:100%;box-sizing:border-box;text-align:center;font:600 17px system-ui;border:0;border-radius:12px;padding:14px;margin:10px 0;background:#2d6cb3;color:#fff}
+pre{white-space:pre-wrap;word-break:break-word;background:#fff;border:1px solid #dbe3ee;border-radius:10px;padding:10px;font-size:13px}</style></head>
+<body><h1>Prueba: ¿puede esta web abrir una carpeta?</h1>
+<p>No sube nada a internet. Solo cuenta los archivos y lee los primeros bytes de uno, en tu móvil. Elige una carpeta de prueba (por ejemplo, tu carpeta de empleado en Synology Drive, desde la app Archivos).</p>
+<button id="b1" type="button">Prueba 1: selector de carpeta moderno</button>
+<label class="b">Prueba 2: carpeta clásica<input id="f2" type="file" webkitdirectory multiple hidden></label>
+<label class="b">Prueba 3: varios archivos a la vez<input id="f3" type="file" multiple hidden></label>
+<pre id="o">Esperando…</pre>
+<script>
+const o=document.getElementById('o');
+const log=t=>o.textContent+='\n'+t;
+o.textContent='Navegador: '+navigator.userAgent+'\nshowDirectoryPicker: '+('showDirectoryPicker' in window?'SÍ':'no')+'\nwebkitdirectory: '+('webkitdirectory' in document.createElement('input')?'SÍ':'no');
+async function leer(files,etq){
+ log('\n['+etq+'] archivos recibidos: '+files.length);
+ const rel=[...files].slice(0,8).map(f=>(f.webkitRelativePath||f.name)+' ('+f.size+' bytes)');log(rel.join('\n'));
+ if(files[0]){try{const b=new Uint8Array(await files[0].slice(0,16).arrayBuffer());log('Lectura de 16 bytes del primero: OK ('+b.length+')')}catch(e){log('Lectura FALLÓ: '+e.message)}}
+}
+document.getElementById('b1').onclick=async()=>{
+ if(!('showDirectoryPicker' in window)){log('\n[Prueba 1] No disponible en este navegador.');return}
+ try{const d=await showDirectoryPicker();let n=0;const nombres=[];
+  async function rec(h,ruta){for await(const [k,v] of h.entries()){if(v.kind==='file'){n++;if(nombres.length<8)nombres.push(ruta+k)}else await rec(v,ruta+k+'/')}}
+  await rec(d,'');log('\n[Prueba 1] carpeta «'+d.name+'»: '+n+' archivos\n'+nombres.join('\n'))}
+ catch(e){log('\n[Prueba 1] Error: '+e.name+' '+e.message)}};
+document.getElementById('f2').onchange=e=>leer(e.target.files,'Prueba 2');
+document.getElementById('f3').onchange=e=>leer(e.target.files,'Prueba 3');
+</script></body></html>
