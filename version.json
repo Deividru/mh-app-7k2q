@@ -1,0 +1,13 @@
+{
+ "version": "8.0",
+ "notas": "Primera versión con actualizaciones automáticas",
+ "app": {
+  "file": "app.html",
+  "sha256": "e8e23e21a3263c5b34e18305e6559748578bb416d9d9d7c4c5057e3087662e4f",
+  "firma": "GcCt1Ksd9CgkoZ732N_gnrRwN9o03zrrUxfHdycnlcrJIqViqo5POh0A0NmJ0kIjrCdXA0ubJntl9laBZkgbEg"
+ },
+ "lanzador": {
+  "file": "Cotejo_Ingenix_Lanzador.html",
+  "version": "8.0"
+ }
+}
