@@ -1,13 +1,13 @@
 {
- "version": "8.6",
- "notas": "El efecto real no cuenta como perdido lo pagado el mes siguiente, corrige el falso desfase de miles de euros en el contrato, añade el «qué pasaría si cambiara la norma» y compara el IRPF con el algoritmo oficial de la AEAT",
+ "version": "8.7",
+ "notas": "Nuevo diagnóstico por épocas: deduce cómo se generan los informes (semanal y diario), comprueba el precio de la dieta informe a informe, revisa el plus de desplazamiento de los vuelos e incluye el detalle diario sin importes",
  "app": {
   "file": "app.html",
   "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
-  "firma": "3vFNoAP7Xhd-kESBDdm60wA9YdSi7DXGhplUSDfO0Yr8kcpGKIzZAE5CJsUF6PXVnt-PSFCESM3qpjhWmelGDw"
+  "firma": "nyd7bowxmTcgkfOYp-2u4ve1KcaeW7lY-pRJetiX-h58HUX8H6Oi6nOYzvZk2Y7dNWHXb3HrvUTGCSN3vlmCsQ"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
-  "version": "8.6"
+  "version": "8.7"
  }
 }

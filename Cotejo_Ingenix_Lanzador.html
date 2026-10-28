@@ -795,6 +795,44 @@ function modelAll(days,mod){const G={};days.forEach(c=>{(G[wkKey(c)]=G[wkKey(c)]
       mesesDondeElCalculoNoCuadra:bad,porMes:meses,_brutoAcumulado:r2(br),_brutoAnualAlRitmoReal:Math.round(proy),_brutoAnualQueJustificaElPorcentaje:implicito,_retenido:r2(ret),_segunAlgoritmo:r2(ideal),_diferencia:r2(ret-ideal),
       lectura:Math.abs(gap)<0.6?'el % aplicado es el del algoritmo para tu ritmo de ingresos':gap>0?'la empresa aplica un % más alto que el de situación básica con tu ritmo real; no es necesariamente un error (puede proyectar más ingresos, otra situación en el modelo 145 o una retención voluntaria superior). Lo que sobre se recupera en la renta; si quieres que baje, pide a la empresa que revise la proyección y tu modelo 145':'la empresa aplica un % más bajo que el de situación básica: puede salirte a pagar en la renta',
       nota:'estimación con el algoritmo de la AEAT 2026 (escala estatal, mínimo personal 5.550 €, sin hijos ni circunstancias especiales, cotizaciones al 6,5 %). No tiene en cuenta tu modelo 145 real, así que sirve para orientar, no para reclamar'}})();
+  // ¿cómo genera la empresa el informe? Se deduce por épocas: informe semanal (hasta 2025) y diario (2026)
+  diag.epocas=(()=>{const O={};const T=d=>D.ts[d];
+    // --- época semanal: balance = (horas − objetivo, la mitad si falta) + 4 por vuelo; objetivo = 40 − 8 por festivo o vacación entre semana
+    const sem=[];Object.values(D.infs).filter(i=>i.tipo==='semanal').forEach(i=>i.weeks.forEach(w=>{const y=w.w<i.w0?i.y+1:i.y,mon=isoMon(y,w.w),days=[0,1,2,3,4,5,6].map(n=>{const dt=new Date(mon+'T00:00:00Z');dt.setUTCDate(dt.getUTCDate()+n);return iso(dt)}),ts=days.map(T);
+      if(ts.filter(Boolean).length<5)return;const h=ts.reduce((a,t)=>a+(t&&t.total||0),0),F=ts.slice(0,5).filter(t=>t&&/FEST|VACA/i.test(t.estado||'')).length,nv=ts.filter(t=>t&&t.vuelo).length;
+      let ex=h-(40-8*F);if(ex<0)ex/=2;const esp=ex+4*nv;
+      // días de extranjero: día con plus = 1; día de vuelo = 1 si se trabaja, 0,5 si no
+      let ed=0;ts.forEach(t=>{if(!t)return;if(t.vuelo)ed+=(t.total>0?1:.5);else if(t.plus)ed+=1});
+      sem.push({y,w:w.w,k:i.k,h,informeH:w.h,esp:r2(esp),inf:w.bal,dif:r2(w.bal-esp),extEsp:ed,extInf:w.ext,vuelos:nv,festVac:F})}));
+    if(sem.length){const bad=sem.filter(s=>Math.abs(s.dif)>0.01);O.semanal={descripcion:'balance semanal = (horas − objetivo; si falta, la mitad) + 4 h por vuelo; objetivo = 40 − 8 por festivo o vacación; productividad = suma de balances × precio hora',
+      semanas:sem.length,cuadran:sem.length-bad.length,desviaciones:bad.slice(0,20).map(s=>({semana:s.y+'-S'+s.w,horas:s.h,vuelos:s.vuelos,festivosOVacaciones:s.festVac,esperado:s.esp,informe:s.inf,diferencia:s.dif})),
+      diasExtranjero:{semanas:sem.length,cuadran:sem.filter(s=>Math.abs(s.extEsp-s.extInf)<.01).length,desviaciones:sem.filter(s=>Math.abs(s.extEsp-s.extInf)>.01).slice(0,12).map(s=>({semana:s.y+'-S'+s.w,esperado:s.extEsp,informe:s.extInf,vuelos:s.vuelos}))}}}
+    // --- precio por día de dieta / desplazamiento y precio de la hora, informe a informe (para ver cuándo cambia)
+    const precios=[];Object.keys(D.infs).sort().forEach(k=>{const i=D.infs[k],c=i.conceptos||{};let dias=0,hP=0,eD=0,eP=0;
+      if(i.tipo==='semanal'){dias=i.weeks.reduce((a,w)=>a+(w.ext||0),0);hP=i.weeks.reduce((a,w)=>a+(w.bal||0),0);eD=c['Plus Extranjero']||0;eP=c['Plus Productividad']||0}
+      else if(i.tipo==='diario'){dias=i.rows.reduce((a,r)=>a+(r.dsp||0),0);hP=i.rows.reduce((a,r)=>a+(r.pr||0),0);eD=c['Plus desplazamiento']||0;eP=c['Plus Productividad']||c['Plus Incentivo']||0}
+      else return;
+      precios.push({mes:k,tipo:i.tipo,dias:r2(dias),_importeDias:r2(eD),precioDia:dias>0&&eD>0?r2(eD/dias):null,horas:r2(hP),_importeHoras:r2(eP),precioHora:Math.abs(hP)>0&&eP?r2(eP/hP):null})});
+    O.precios=precios;const pd=[...new Set(precios.map(p=>p.precioDia).filter(v=>v!=null))];O.cambiosDePrecioDia=pd.length>1?pd:null;
+    // --- época diaria: se compara cada día con la norma de la empresa (bolsa = h − 8; cobro igual pero la mitad si falta; vuelo +4 solo al cobro; semana con absorción de deudas)
+    O.diaria={dias:cmp.length,cuadranBolsa:cmp.filter(c=>c.sinTs||!pb(c)||Math.abs(c.inf.b-c.rule.b)<=0.01).length,cuadranCobro:cmp.filter(c=>c.sinTs||!pb(c)||Math.abs(c.inf.pr-EMP[c.d])<=0.01).length,
+      excepciones:cmp.filter(c=>!c.sinTs&&pb(c)&&(Math.abs(c.inf.pr-EMP[c.d])>0.01||Math.abs(c.inf.b-c.rule.b)>0.01)).slice(0,40).map(c=>({dia:c.d,horas:c.ts.t,estado:c.ts.est||(vuelo(c.d)?'VUELO':''),informe:{cobro:c.inf.pr,bolsa:c.inf.b},norma:{cobro:EMP[c.d],bolsa:c.rule.b}}))};
+    return O})();
+  // dieta / plus de desplazamiento en los días de vuelo: ida 1 día, vuelta 0,5; resto de días con plus, 1. Si el informe paga lo mismo que el timesheet, se da por aceptado
+  diag.desplazamiento=(()=>{if(!dates.length)return null;let ida=true;const dias=[];
+    dates.forEach(d=>{const t=D.ts[d]||{},r=INF[d];if(d<YR+'-01-01'&&!(t.plus||t.vuelo))return;const plus=!!t.plus;let esp=0;
+      if(t.vuelo||(r&&r.vu)){esp=ida?1:.5;ida=!ida}else if(plus)esp=1;
+      dias.push({d,horas:t.total||0,vuelo:!!(t.vuelo||(r&&r.vu)),plusEnTimesheet:plus,esperado:esp,informe:r?r.dsp||0:null})});
+    const dif=dias.filter(x=>x.informe!=null&&Math.abs(x.informe-x.esperado)>0.01);const porMes={};
+    dif.forEach(x=>{const k=x.d.slice(2,4)+x.d.slice(5,7);const m=porMes[k]||(porMes[k]={mes:k,dias:0,esperado:0,informe:0,_euros:0});m.dias++;m.esperado+=x.esperado;m.informe+=x.informe;m._euros+=(x.informe-x.esperado)*(rateD(k)||0)});
+    Object.values(porMes).forEach(m=>{m.esperado=r2(m.esperado);m.informe=r2(m.informe);m._euros=r2(m._euros)});
+    return{descripcion:'día con plus en el timesheet = 1; día de vuelo: ida 1 y vuelta 0,5 (alternando); lo que difiere del informe se lista aquí',
+      diasRevisados:dias.length,diasConDiferencia:dif.length,porMes:Object.values(porMes),dias:dif.slice(0,40).map(x=>({dia:x.d,horas:x.horas,vuelo:x.vuelo,plusEnTimesheet:x.plusEnTimesheet,esperado:x.esperado,informe:x.informe}))}})();
+  // detalle por día, solo horas y marcas (sin importes ni textos libres) para poder deducir las normas de cada época
+  diag.detalle=(()=>{const dia=Object.values(D.ts).filter(t=>t&&t.fecha).map(t=>t.fecha).sort();const out={dias:[],semanasInforme:[]};
+    Object.keys(D.ts).sort().forEach(d=>{const t=D.ts[d];if(!t)return;const r=INF[d];out.dias.push({d,h:t.total||0,est:(t.estado||'')||undefined,vuelo:t.vuelo||undefined,plus:t.plus?1:undefined,
+      inf:r?{h:r.t,pr:r.pr,b:r.b,x:r.x,n:r.n,dsp:r.dsp,vac:r.vac}:undefined})});
+    Object.values(D.infs).filter(i=>i.tipo==='semanal').forEach(i=>i.weeks.forEach(w=>out.semanasInforme.push({mes:i.k,sem:w.w,h:w.h,balance:w.bal,extranjero:w.ext,nocturnas:w.noct,vac:w.vac})));return out})();
   // normas aplicadas (para poder explicarlas y compararlas entre empleados)
   diag.normas={jornadaDiaria:8,diaLaborable:'bolsa = horas − 8; cobro = horas de más enteras, o la mitad de lo que falta',finDeSemana:'todas las horas a bolsa y a cobro',compensacion:'bolsa −8 h y cobro −4 h (si se trabajan horas ese día, cuenta como día corto)',
     vuelo:'el viaje cuenta 4 h para el cobro; sin trabajar entre semana se observa −1 h (y −2 h en otros empleados); en fin de semana +4 h sin tocar la bolsa',festivos:'calendario laboral: sin trabajar 0 y 0; trabajado = todas las horas como extra, sin bolsa',
@@ -874,8 +912,8 @@ root.TSX={build,parse,horasDia,weeknum2,serial,DIAS};
 
 // Lanzador: elegir carpeta, leer documentos (solo lectura, en memoria), calcular y abrir la app. Informe de diagnóstico.
 (function(){
-window.LZ_VER='8.6';const VER='8.6'; // un solo número de versión: el mismo que se publica en la web
-const PUB_VER='8.6',PUB_URL='https://deividru.github.io/mh-app-7k2q/';
+window.LZ_VER='8.7';const VER='8.7'; // un solo número de versión: el mismo que se publica en la web
+const PUB_VER='8.7',PUB_URL='https://deividru.github.io/mh-app-7k2q/';
 const $=s=>document.querySelector(s);
 const LZ=window.LZ={files:[],errors:[],res:null,docs:null,tokens:[],started:0};
 window.addEventListener('error',e=>LZ.errors.push(String(e.message||e)));
@@ -1002,7 +1040,7 @@ function report(withMoney){const R=LZ.res,F=LZ.files;const cnt=t=>F.filter(f=>f.
     lectura:F.filter(f=>f.leer||f.tipo==='otro').map(f=>({tipo:f.tipo,archivo:anon(f.file.webkitRelativePath||f.name),leido:!!f.leer,ok:f.leer?!f.err:null,error:f.err||undefined,avisos:(f.warn&&f.warn.length)?f.warn.map(anon):undefined,resultado:f.res,ms:f.ms})),
     formatos:{conceptosNomina:[...new Set(F.flatMap(f=>f.codes||[]))].sort(),conceptosInforme:[...new Set(F.flatMap(f=>f.conc||[]).map(c=>c.replace(/\d+([.,]\d+)?/g,'#')))].map(anon).sort(),cabecerasInforme:[...new Set(F.map(f=>(f.hdr||'').replace(/\s+/g,' ').trim()).filter(Boolean))].map(anon),
       informes:{diario:(LZ.docs?LZ.docs.infs.filter(i=>i.tipo==='diario').length:0),semanal:(LZ.docs?LZ.docs.infs.filter(i=>i.tipo==='semanal').length:0),desconocido:(LZ.docs?LZ.docs.infs.filter(i=>!i.tipo).length:0)}},
-    cotejo:R?R.diag.meses:null,reglas:R?R.diag.reglas:null,contrato:R?strip(R.diag.contrato,withMoney):null,incidencias:R?strip(R.diag.incidencias,withMoney):null,efecto:R?strip(R.diag.efecto,withMoney):null,queSi:R?strip(R.diag.queSi,withMoney):null,irpf:R?strip(R.diag.irpf,withMoney):null,normas:R?R.diag.normas:null,erroresJS:LZ.errors.filter(e=>!/importScripts|blob:null|fake worker/i.test(e)).map(anon)};
+    cotejo:R?R.diag.meses:null,reglas:R?R.diag.reglas:null,contrato:R?strip(R.diag.contrato,withMoney):null,incidencias:R?strip(R.diag.incidencias,withMoney):null,efecto:R?strip(R.diag.efecto,withMoney):null,queSi:R?strip(R.diag.queSi,withMoney):null,epocas:R?strip(R.diag.epocas,withMoney):null,desplazamiento:R?strip(R.diag.desplazamiento,withMoney):null,detalleDiario:R?R.diag.detalle:null,irpf:R?strip(R.diag.irpf,withMoney):null,normas:R?R.diag.normas:null,erroresJS:LZ.errors.filter(e=>!/importScripts|blob:null|fake worker/i.test(e)).map(anon)};
   if(withMoney&&R)rep.importes=Object.entries(R.priv.months).map(([k,q])=>({mes:k,informe:q.inf,nomina:q.rem,liquido:q.liq,irpf:q.irpfP}));
   return JSON.parse(anon(JSON.stringify(rep)))}
 // nombre del archivo: código de empleado (N45) + iniciales + fecha y hora, para distinguir los informes de cada compañero
