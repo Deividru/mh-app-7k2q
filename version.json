@@ -1,13 +1,13 @@
 {
- "version": "8.4",
- "notas": "Versión visible bajo el logo en todas las pantallas",
+ "version": "8.5",
+ "notas": "Panel \"Lo que de verdad pasa\" (bolsa y cobro frente a tus timesheets), estado criterio de la empresa, compensación con horas, tickets, notas del año actual y diagnóstico con efecto y normas",
  "app": {
   "file": "app.html",
   "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
-  "firma": "GanR4zKXxBrEtDOyzJt4X5InaenYR2nNYhs17k8TdjyVY0U_OZiKrWKRlnKgD23mQAdsZ1IrP-jiO-wt0sxfHA"
+  "firma": "uTpA8wxowxlmUHnjFrbO0huqNVcTk9a516cufwdVg1WuXP2BSOCXnxxfq5qG-KE0lGyZZhK-tX5yxpnG_z7TZA"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
-  "version": "8.4"
+  "version": "8.5"
  }
 }
