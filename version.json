@@ -1,13 +1,13 @@
 {
- "version": "8.1",
- "notas": "Lanzador: calendario de festivos, cambios de contrato con referencia lineal, filtro por año, norma de cobro e informe de diagnóstico ampliado",
+ "version": "8.2",
+ "notas": "Tarifas de meses con dos documentos (prácticas y contrato) ya no generan falsos cambios de contrato",
  "app": {
   "file": "app.html",
   "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
-  "firma": "II1miwthPvLbgvameZMtAx0WBZH2ucZvKt_k5wa0gxXIm4t8eAEN3lSvmrX5fzUcMCRxETXcg_YqmPKDfrIinQ"
+  "firma": "OeYNWtpWKjUM43pKvrJf84MAg515v_Nyw207Wl7oFZBElIv2hj3WtsOoyhY82RZzzmZZzE40Xa8V3ydQKJOGaw"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
-  "version": "8.1"
+  "version": "8.2"
  }
 }
