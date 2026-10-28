@@ -1,13 +1,13 @@
 {
- "version": "8.0",
- "notas": "Primera versión con actualizaciones automáticas",
+ "version": "8.1",
+ "notas": "Lanzador: calendario de festivos, cambios de contrato con referencia lineal, filtro por año, norma de cobro e informe de diagnóstico ampliado",
  "app": {
   "file": "app.html",
   "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
-  "firma": "ZSX6gbXKMYB9iYEf8b2_IeN2HMAqY2B-h_6w4jA2rZKyw0YzkAc0UsmwhxCWj47tDvOq5VxXxM5jNEheLE7PbQ"
+  "firma": "II1miwthPvLbgvameZMtAx0WBZH2ucZvKt_k5wa0gxXIm4t8eAEN3lSvmrX5fzUcMCRxETXcg_YqmPKDfrIinQ"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
-  "version": "8.0"
+  "version": "8.1"
  }
 }
