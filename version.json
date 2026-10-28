@@ -1,13 +1,13 @@
 {
- "version": "8.2",
- "notas": "Tarifas de meses con dos documentos (prácticas y contrato) ya no generan falsos cambios de contrato",
+ "version": "8.3",
+ "notas": "Versión visible en pantalla y en el nombre del diagnóstico",
  "app": {
   "file": "app.html",
   "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
-  "firma": "OeYNWtpWKjUM43pKvrJf84MAg515v_Nyw207Wl7oFZBElIv2hj3WtsOoyhY82RZzzmZZzE40Xa8V3ydQKJOGaw"
+  "firma": "ElBDO91TixZq-gqEit4zEOY_LteGskaZHXO5SUJQpjpwRZDdpuwquJgwcbJwVd7cjc_HmUILzXPM5Bs5U8TFOg"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
-  "version": "8.2"
+  "version": "8.3"
  }
 }

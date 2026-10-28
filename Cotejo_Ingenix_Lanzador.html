@@ -833,8 +833,8 @@ root.TSX={build,parse,horasDia,weeknum2,serial,DIAS};
 
 // Lanzador: elegir carpeta, leer documentos (solo lectura, en memoria), calcular y abrir la app. Informe de diagnóstico.
 (function(){
-const VER='1.1.2 (28-oct-2026)';
-const PUB_VER='8.2',PUB_URL='https://deividru.github.io/mh-app-7k2q/';
+const VER='8.3'; // un solo número de versión: el mismo que se publica en la web
+const PUB_VER='8.3',PUB_URL='https://deividru.github.io/mh-app-7k2q/';
 const $=s=>document.querySelector(s);
 const LZ=window.LZ={files:[],errors:[],res:null,docs:null,tokens:[],started:0};
 window.addEventListener('error',e=>LZ.errors.push(String(e.message||e)));
@@ -968,7 +968,7 @@ function report(withMoney){const R=LZ.res,F=LZ.files;const cnt=t=>F.filter(f=>f.
 function repName(withMoney){const p=n=>String(n).padStart(2,'0'),t=new Date(),cl=s=>String(s||'').replace(/[^A-Za-z0-9]/g,'');
   const root=(LZ.dir&&LZ.dir.name)||((LZ.files[0]&&(LZ.files[0].file.webkitRelativePath||'').split('/')[0])||'');
   const cod=(root.match(/(?:^|[^A-Za-z])N\s?(\d{1,3})(?!\d)/i)||[])[1],ini=LZ.res&&LZ.res.pub&&LZ.res.pub.emp&&LZ.res.pub.emp.ini;
-  return ['diagnostico_cotejo',cod&&'N'+cod,cl(ini),`${t.getFullYear()}-${p(t.getMonth()+1)}-${p(t.getDate())}`,p(t.getHours())+p(t.getMinutes())+(withMoney?'_importes':'')].filter(Boolean).join('_')+'.json'}
+  return ['diagnostico_cotejo',cod&&'N'+cod,cl(ini),'v'+VER,`${t.getFullYear()}-${p(t.getMonth()+1)}-${p(t.getDate())}`,p(t.getHours())+p(t.getMinutes())+(withMoney?'_importes':'')].filter(Boolean).join('_')+'.json'}
 LZ.openReport=function(){let m=document.getElementById('lzRep');if(!m){m=document.createElement('div');m.id='lzRep';document.body.appendChild(m)}
   const draw=()=>{const withMoney=m.dataset.money==='1';const r=report(withMoney);const txt=JSON.stringify(r,null,2);
     m.innerHTML=`<div class="lzrb"><h3>Informe de diagnóstico</h3><p>Sirve para mejorar la app cuando algo no se lee o no cuadra. <b>No incluye</b> tu nombre, DNI, notas del timesheet ni importes (salvo que marques la casilla). Revísalo antes de enviarlo.</p>
@@ -985,6 +985,8 @@ LZ.openReport=function(){let m=document.getElementById('lzRep');if(!m){m=documen
     m.querySelector('#lzCopy').onclick=()=>navigator.clipboard&&navigator.clipboard.writeText(txt).then(()=>{m.querySelector('#lzCopy').textContent='Copiado'});
     m.querySelector('#lzDown').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'application/json'}));a.download=repName(withMoney);document.body.appendChild(a);a.click();a.remove()}};
   draw()};
+// etiqueta de versión siempre visible (también dentro de la app), para que cualquiera pueda decir qué versión tiene
+(function(){const b=document.createElement('div');b.id='lzBadge';b.textContent='Versión '+VER;b.title='Si algo no va bien, dinos este número';b.style.cssText='position:fixed;right:12px;bottom:10px;z-index:9000;background:rgba(18,40,74,.92);color:#fff;font:600 12.5px system-ui,sans-serif;padding:5px 11px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.3);pointer-events:none';document.body.appendChild(b)})();
 welcome();
 })();
 
