@@ -1,13 +1,13 @@
 {
- "version": "8.7",
- "notas": "Nuevo diagnóstico por épocas: deduce cómo se generan los informes (semanal y diario), comprueba el precio de la dieta informe a informe, revisa el plus de desplazamiento de los vuelos e incluye el detalle diario sin importes",
+ "version": "8.8",
+ "notas": "El diagnóstico incluye ahora una copia ligera de lo leído (días, informes, conceptos y nóminas) para rehacer el análisis sin pedir más datos",
  "app": {
   "file": "app.html",
   "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
-  "firma": "nyd7bowxmTcgkfOYp-2u4ve1KcaeW7lY-pRJetiX-h58HUX8H6Oi6nOYzvZk2Y7dNWHXb3HrvUTGCSN3vlmCsQ"
+  "firma": "-r_TSBcj-86fmlsgSQuSEUTugaIpaKMxfd2L0L3nzkHggrCAYlXNJn2nGXX8n_bRb8ydEWNmdY5gnMlJ38_mog"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
-  "version": "8.7"
+  "version": "8.8"
  }
 }

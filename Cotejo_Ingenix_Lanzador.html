@@ -828,11 +828,20 @@ function modelAll(days,mod){const G={};days.forEach(c=>{(G[wkKey(c)]=G[wkKey(c)]
     Object.values(porMes).forEach(m=>{m.esperado=r2(m.esperado);m.informe=r2(m.informe);m._euros=r2(m._euros)});
     return{descripcion:'día con plus en el timesheet = 1; día de vuelo: ida 1 y vuelta 0,5 (alternando); lo que difiere del informe se lista aquí',
       diasRevisados:dias.length,diasConDiferencia:dif.length,porMes:Object.values(porMes),dias:dif.slice(0,40).map(x=>({dia:x.d,horas:x.horas,vuelo:x.vuelo,plusEnTimesheet:x.plusEnTimesheet,esperado:x.esperado,informe:x.informe}))}})();
-  // detalle por día, solo horas y marcas (sin importes ni textos libres) para poder deducir las normas de cada época
-  diag.detalle=(()=>{const dia=Object.values(D.ts).filter(t=>t&&t.fecha).map(t=>t.fecha).sort();const out={dias:[],semanasInforme:[]};
-    Object.keys(D.ts).sort().forEach(d=>{const t=D.ts[d];if(!t)return;const r=INF[d];out.dias.push({d,h:t.total||0,est:(t.estado||'')||undefined,vuelo:t.vuelo||undefined,plus:t.plus?1:undefined,
-      inf:r?{h:r.t,pr:r.pr,b:r.b,x:r.x,n:r.n,dsp:r.dsp,vac:r.vac}:undefined})});
-    Object.values(D.infs).filter(i=>i.tipo==='semanal').forEach(i=>i.weeks.forEach(w=>out.semanasInforme.push({mes:i.k,sem:w.w,h:w.h,balance:w.bal,extranjero:w.ext,nocturnas:w.noct,vac:w.vac})));return out})();
+  // copia ligera de lo leído, para poder rehacer el análisis sin pedir más datos. Horas y marcas siempre; importes solo bajo campos con «_» (se quitan sin «incluir importes»).
+  // Sin nombres ni textos libres: el proyecto se reduce a su código y las notas/observaciones a palabras clave.
+  diag.detalle=(()=>{const kw=s=>{s=String(s||'');const o=[];[['festivo','festivo'],['vacaci','vacaciones'],['vuelo','vuelo'],['compensa','compensacion'],['enfermed','enfermedad'],['baja','baja'],['mes anterior','mes anterior'],['revis','revisar']].forEach(([r,n])=>{if(new RegExp(r,'i').test(s))o.push(n)});return o.length?o.join('+'):(s.trim()&&!/^nan$/i.test(s.trim())?'otra':undefined)};
+    const code=s=>{const m=String(s||'').match(/P\d{4}/);return m?m[0]:undefined};
+    const INFD={};Object.values(D.infs).filter(i=>i.tipo==='diario').forEach(i=>i.rows.forEach(r=>{INFD[r.d]=r}));
+    const out={nota:'dias = timesheet por día (+ fila del informe diario si existe); semanasInforme = informes semanales; informes = fila a fila de cada informe diario; conceptos y nóminas bajo _ (con importes)',dias:[],semanasInforme:[],informesDiarios:[],_conceptosInforme:[],_nominas:[]};
+    Object.keys(D.ts).sort().forEach(d=>{const t=D.ts[d];if(!t)return;const r=INFD[d];out.dias.push({d,h:t.total||0,ent:t.entrada||undefined,sal:t.salida||undefined,pausa:t.pausa||undefined,est:(t.estado||'')||undefined,vuelo:t.vuelo||undefined,plus:t.plus?1:undefined,proy:code(t.proyecto),nota:kw(t.nota),src:t.src,
+      inf:r?{h:r.t,pr:r.pr,b:r.b,x:r.x,n:r.n,dsp:r.dsp,vac:r.vac,vu:r.vu||undefined,obs:kw(r.obs)}:undefined})});
+    Object.values(D.infs).forEach(i=>{if(i.tipo==='semanal')i.weeks.forEach(w=>out.semanasInforme.push({mes:i.k,y:i.y,sem:w.w,h:w.h,balance:w.bal,extranjero:w.ext,nocturnas:w.noct,vac:w.vac,proy:code(w.proj),obs:kw(w.obs)}));
+      else if(i.tipo==='diario')out.informesDiarios.push({mes:i.k,semanas:[i.w0,i.w1],filas:i.rows.length});
+      out._conceptosInforme.push({mes:i.k,tipo:i.tipo||null,conceptos:i.conceptos,total:i.total})});
+    Object.keys(D.noms).sort().forEach(k=>{const n=D.noms[k];out._nominas.push({mes:k,dias:n.dias,tarifa:n.tarifa,rem:n.rem,baseSS:n.base_ss,baseIRPF:n.base_irpf,devengado:n.devengado,aDeducir:n.deducir,liquido:n.liquido,irpfPct:n.irpfP,
+      devengos:Object.entries(n.dev||{}).map(([c,v])=>({cod:c,concepto:v.name,cantidad:v.qty,precio:v.price,importe:v.val})),deducciones:Object.entries(n.ded||{}).map(([c,v])=>({cod:c,concepto:v.name,pct:v.pct,importe:v.val}))})});
+    return out})();
   // normas aplicadas (para poder explicarlas y compararlas entre empleados)
   diag.normas={jornadaDiaria:8,diaLaborable:'bolsa = horas − 8; cobro = horas de más enteras, o la mitad de lo que falta',finDeSemana:'todas las horas a bolsa y a cobro',compensacion:'bolsa −8 h y cobro −4 h (si se trabajan horas ese día, cuenta como día corto)',
     vuelo:'el viaje cuenta 4 h para el cobro; sin trabajar entre semana se observa −1 h (y −2 h en otros empleados); en fin de semana +4 h sin tocar la bolsa',festivos:'calendario laboral: sin trabajar 0 y 0; trabajado = todas las horas como extra, sin bolsa',
@@ -912,8 +921,8 @@ root.TSX={build,parse,horasDia,weeknum2,serial,DIAS};
 
 // Lanzador: elegir carpeta, leer documentos (solo lectura, en memoria), calcular y abrir la app. Informe de diagnóstico.
 (function(){
-window.LZ_VER='8.7';const VER='8.7'; // un solo número de versión: el mismo que se publica en la web
-const PUB_VER='8.7',PUB_URL='https://deividru.github.io/mh-app-7k2q/';
+window.LZ_VER='8.8';const VER='8.8'; // un solo número de versión: el mismo que se publica en la web
+const PUB_VER='8.8',PUB_URL='https://deividru.github.io/mh-app-7k2q/';
 const $=s=>document.querySelector(s);
 const LZ=window.LZ={files:[],errors:[],res:null,docs:null,tokens:[],started:0};
 window.addEventListener('error',e=>LZ.errors.push(String(e.message||e)));
@@ -1040,7 +1049,7 @@ function report(withMoney){const R=LZ.res,F=LZ.files;const cnt=t=>F.filter(f=>f.
     lectura:F.filter(f=>f.leer||f.tipo==='otro').map(f=>({tipo:f.tipo,archivo:anon(f.file.webkitRelativePath||f.name),leido:!!f.leer,ok:f.leer?!f.err:null,error:f.err||undefined,avisos:(f.warn&&f.warn.length)?f.warn.map(anon):undefined,resultado:f.res,ms:f.ms})),
     formatos:{conceptosNomina:[...new Set(F.flatMap(f=>f.codes||[]))].sort(),conceptosInforme:[...new Set(F.flatMap(f=>f.conc||[]).map(c=>c.replace(/\d+([.,]\d+)?/g,'#')))].map(anon).sort(),cabecerasInforme:[...new Set(F.map(f=>(f.hdr||'').replace(/\s+/g,' ').trim()).filter(Boolean))].map(anon),
       informes:{diario:(LZ.docs?LZ.docs.infs.filter(i=>i.tipo==='diario').length:0),semanal:(LZ.docs?LZ.docs.infs.filter(i=>i.tipo==='semanal').length:0),desconocido:(LZ.docs?LZ.docs.infs.filter(i=>!i.tipo).length:0)}},
-    cotejo:R?R.diag.meses:null,reglas:R?R.diag.reglas:null,contrato:R?strip(R.diag.contrato,withMoney):null,incidencias:R?strip(R.diag.incidencias,withMoney):null,efecto:R?strip(R.diag.efecto,withMoney):null,queSi:R?strip(R.diag.queSi,withMoney):null,epocas:R?strip(R.diag.epocas,withMoney):null,desplazamiento:R?strip(R.diag.desplazamiento,withMoney):null,detalleDiario:R?R.diag.detalle:null,irpf:R?strip(R.diag.irpf,withMoney):null,normas:R?R.diag.normas:null,erroresJS:LZ.errors.filter(e=>!/importScripts|blob:null|fake worker/i.test(e)).map(anon)};
+    cotejo:R?R.diag.meses:null,reglas:R?R.diag.reglas:null,contrato:R?strip(R.diag.contrato,withMoney):null,incidencias:R?strip(R.diag.incidencias,withMoney):null,efecto:R?strip(R.diag.efecto,withMoney):null,queSi:R?strip(R.diag.queSi,withMoney):null,epocas:R?strip(R.diag.epocas,withMoney):null,desplazamiento:R?strip(R.diag.desplazamiento,withMoney):null,detalleDiario:R?strip(R.diag.detalle,withMoney):null,irpf:R?strip(R.diag.irpf,withMoney):null,normas:R?R.diag.normas:null,erroresJS:LZ.errors.filter(e=>!/importScripts|blob:null|fake worker/i.test(e)).map(anon)};
   if(withMoney&&R)rep.importes=Object.entries(R.priv.months).map(([k,q])=>({mes:k,informe:q.inf,nomina:q.rem,liquido:q.liq,irpf:q.irpfP}));
   return JSON.parse(anon(JSON.stringify(rep)))}
 // nombre del archivo: código de empleado (N45) + iniciales + fecha y hora, para distinguir los informes de cada compañero
