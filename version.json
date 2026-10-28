@@ -1,13 +1,13 @@
 {
- "version": "8.3",
- "notas": "Versión visible en pantalla y en el nombre del diagnóstico",
+ "version": "8.4",
+ "notas": "Versión visible bajo el logo en todas las pantallas",
  "app": {
   "file": "app.html",
   "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
-  "firma": "ElBDO91TixZq-gqEit4zEOY_LteGskaZHXO5SUJQpjpwRZDdpuwquJgwcbJwVd7cjc_HmUILzXPM5Bs5U8TFOg"
+  "firma": "GanR4zKXxBrEtDOyzJt4X5InaenYR2nNYhs17k8TdjyVY0U_OZiKrWKRlnKgD23mQAdsZ1IrP-jiO-wt0sxfHA"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
-  "version": "8.3"
+  "version": "8.4"
  }
 }
