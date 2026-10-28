@@ -1,13 +1,13 @@
 {
- "version": "8.5",
- "notas": "Panel \"Lo que de verdad pasa\" (bolsa y cobro frente a tus timesheets), estado criterio de la empresa, compensación con horas, tickets, notas del año actual y diagnóstico con efecto y normas",
+ "version": "8.6",
+ "notas": "El efecto real no cuenta como perdido lo pagado el mes siguiente, corrige el falso desfase de miles de euros en el contrato, añade el «qué pasaría si cambiara la norma» y compara el IRPF con el algoritmo oficial de la AEAT",
  "app": {
   "file": "app.html",
   "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
-  "firma": "uTpA8wxowxlmUHnjFrbO0huqNVcTk9a516cufwdVg1WuXP2BSOCXnxxfq5qG-KE0lGyZZhK-tX5yxpnG_z7TZA"
+  "firma": "3vFNoAP7Xhd-kESBDdm60wA9YdSi7DXGhplUSDfO0Yr8kcpGKIzZAE5CJsUF6PXVnt-PSFCESM3qpjhWmelGDw"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
-  "version": "8.5"
+  "version": "8.6"
  }
 }
