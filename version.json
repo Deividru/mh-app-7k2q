@@ -1,13 +1,13 @@
 {
- "version": "9.1",
- "notas": "Nuevo inicio tipo panel, aspecto renovado, día tipo para rellenar rápido y botón para descartar cambios y volver a lo guardado",
+ "version": "9.2",
+ "notas": "Nuevo tema Ocean Depths (marino y verde azulado), selector de proyecto con la lista de la empresa, semanas validadas solo informativas con botón para pedir revisión, y pantalla para ver los informes de la empresa tal cual con su PDF",
  "app": {
   "file": "app.html",
   "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
-  "firma": "GHeHYgOEJVqHSJJ5qNr24t33HbR-qMwma2bY2bEDvXbJPwmn3mDm3aETDB3PnaUdpsT7lfc-J8AmkQSPauZtQA"
+  "firma": "9PZ8Got0bM5eE_ds_1g3J-HNYLKxfLl2g-w_OWT2ctg86HU7KmQnC0d9uI8Adgv7j4vtu-k4BBInsgPjciE4Lw"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
-  "version": "9.1"
+  "version": "9.2"
  }
 }
