@@ -1,13 +1,13 @@
 {
- "version": "8.9",
- "notas": "Elige al abrir la carpeta: rellenar tus horas (rápido, solo este año) o ver tus datos. Menú agrupado, resumen más calmado y paneles de bolsa y dieta al rellenar horas",
+ "version": "9.0",
+ "notas": "Pantallas más tranquilas: Incidencias empieza por la lista, las explicaciones largas de Bolsa y Contrato se abren al pulsar, submenú en el móvil y el planning de vacaciones se carga solo desde la carpeta principal de Synology Drive",
  "app": {
   "file": "app.html",
   "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
-  "firma": "R5TqAoxFoWCg-FXE8Urdhxa7zl2Y6AlYQjv663uy94E3lSy0q2YkDQblkarGcHRClGXNk-EiFrBtNHTk6B7X7w"
+  "firma": "VQcA4lufIn3ZKjBpwfBqrhOlDW9KC3me1O5-snRKox5K_stCkrpPjmtsLe_3SW-GPgTg4Ha19-FZCzYRH85KQQ"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
-  "version": "8.9"
+  "version": "9.0"
  }
 }
