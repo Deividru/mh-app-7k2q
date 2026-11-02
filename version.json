@@ -1,13 +1,13 @@
 {
- "version": "8.8",
- "notas": "El diagnóstico incluye ahora una copia ligera de lo leído (días, informes, conceptos y nóminas) para rehacer el análisis sin pedir más datos",
+ "version": "8.9",
+ "notas": "Elige al abrir la carpeta: rellenar tus horas (rápido, solo este año) o ver tus datos. Menú agrupado, resumen más calmado y paneles de bolsa y dieta al rellenar horas",
  "app": {
   "file": "app.html",
   "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
-  "firma": "-r_TSBcj-86fmlsgSQuSEUTugaIpaKMxfd2L0L3nzkHggrCAYlXNJn2nGXX8n_bRb8ydEWNmdY5gnMlJ38_mog"
+  "firma": "R5TqAoxFoWCg-FXE8Urdhxa7zl2Y6AlYQjv663uy94E3lSy0q2YkDQblkarGcHRClGXNk-EiFrBtNHTk6B7X7w"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
-  "version": "8.8"
+  "version": "8.9"
  }
 }
