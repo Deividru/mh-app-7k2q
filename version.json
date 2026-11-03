@@ -1,13 +1,13 @@
 {
- "version": "9.2",
- "notas": "Nuevo tema Ocean Depths (marino y verde azulado), selector de proyecto con la lista de la empresa, semanas validadas solo informativas con botón para pedir revisión, y pantalla para ver los informes de la empresa tal cual con su PDF",
+ "version": "9.3",
+ "notas": "Cada incidencia dice claro si es un error en tu contra, el criterio de la empresa o algo sin explicar, y lleva a los días exactos; la bolsa ya no muestra textos de otra persona (lo de «julio»); vacaciones contadas como compensación se detectan aparte",
  "app": {
   "file": "app.html",
   "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
-  "firma": "9PZ8Got0bM5eE_ds_1g3J-HNYLKxfLl2g-w_OWT2ctg86HU7KmQnC0d9uI8Adgv7j4vtu-k4BBInsgPjciE4Lw"
+  "firma": "AgeYbn2Kv7No-B6A9CLkuvb34UYkOFmhLMzbEfI4PxjOhBa25mUvWvdytfVazto_STm4MruQ62QwI5nr-6j4cQ"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
-  "version": "9.2"
+  "version": "9.3"
  }
 }
