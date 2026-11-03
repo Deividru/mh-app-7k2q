@@ -1,13 +1,13 @@
 {
- "version": "9.3",
- "notas": "Cada incidencia dice claro si es un error en tu contra, el criterio de la empresa o algo sin explicar, y lleva a los días exactos; la bolsa ya no muestra textos de otra persona (lo de «julio»); vacaciones contadas como compensación se detectan aparte",
+ "version": "9.4",
+ "notas": "Nueva pantalla Vuelos con lo pactado frente a lo pagado; la bolsa cuenta tus vacaciones del planning y la gráfica llega a fin de año; el planning se recuerda; buscador para llegar a cada pantalla",
  "app": {
   "file": "app.html",
   "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
-  "firma": "AgeYbn2Kv7No-B6A9CLkuvb34UYkOFmhLMzbEfI4PxjOhBa25mUvWvdytfVazto_STm4MruQ62QwI5nr-6j4cQ"
+  "firma": "-6eYoHXlktDY5quLd1FwnR0JzDWPurcA7TXD1gpJvfhQ-a85ggXNkT2SbCk4wv6uFYaF0urZkG71LVIwY9Jp7g"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
-  "version": "9.3"
+  "version": "9.4"
  }
 }
