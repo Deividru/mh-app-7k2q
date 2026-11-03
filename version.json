@@ -1,13 +1,13 @@
 {
- "version": "9.4",
- "notas": "Nueva pantalla Vuelos con lo pactado frente a lo pagado; la bolsa cuenta tus vacaciones del planning y la gráfica llega a fin de año; el planning se recuerda; buscador para llegar a cada pantalla",
+ "version": "9.5",
+ "notas": "Las incidencias que la empresa arregla en una nómina posterior quedan resueltas solas; las dietas de otros países (p. ej. México) se separan con su precio y ya no parecen un cambio de condiciones",
  "app": {
   "file": "app.html",
   "sha256": "9a27d261455d6d37d3b3ec3056ea02e2bc3cb392305bfab82230a5b7cf011567",
-  "firma": "-6eYoHXlktDY5quLd1FwnR0JzDWPurcA7TXD1gpJvfhQ-a85ggXNkT2SbCk4wv6uFYaF0urZkG71LVIwY9Jp7g"
+  "firma": "Se5pDsC2BZXx5VV9PoAxy0gANCdTFGuD3yVJxoKrXgrpg0ZEzWcDhRoPAX0mkcOhxAx1aIcI9joYphlak_cKUA"
  },
  "lanzador": {
   "file": "Cotejo_Ingenix_Lanzador.html",
-  "version": "9.4"
+  "version": "9.5"
  }
 }
